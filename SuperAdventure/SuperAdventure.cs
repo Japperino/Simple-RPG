@@ -251,8 +251,8 @@ namespace SuperAdventure
 
                 lblHitPoints.Text = _player.CurrentHitPoints.ToString();
                 lblGold.Text = _player.Gold.ToString();
-                lblExperience = _player.ExperiencePoints.ToString();
-                lblLevel = _player.Level.ToString();
+                lblExperience.Text = _player.ExperiencePoints.ToString();
+                lblLevel.Text = _player.Level.ToString();
 
                 UpdateInventoryListInUI();
                 UpdateWeaponListInUI();
@@ -398,7 +398,7 @@ namespace SuperAdventure
                 {
                     if (ii.Quantity > 0)
                     {
-                        healingPotions.Add((HealingPotion)ii.details);
+                        healingPotions.Add((HealingPotion)ii.Details);
                     }
                 }
             }
