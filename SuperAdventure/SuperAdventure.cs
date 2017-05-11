@@ -280,7 +280,7 @@ namespace SuperAdventure
                 {
                     if (ii.Quantity > 0)
                     {
-                        healingPotions.Add((HealingPotion)ii.details);
+                        healingPotions.Add((HealingPotion)ii.Details);
                     }
                 }
             }
