@@ -61,7 +61,7 @@ namespace Engine
                     player.CurrentWeapon = (Weapon)World.ItemByID(currentWeaponID);
                 }
 
-                foreach (XmlNode node in playerData.SelectNodes("/Player/Stats/InventoryItems/InventoryItem"))
+                foreach (XmlNode node in playerData.SelectNodes("/Player/InventoryItems/InventoryItem"))
                 {
                     int id = Convert.ToInt32(node.Attributes["ID"].Value);
                     int quantity = Convert.ToInt32(node.Attributes["Quantity"].Value);
@@ -201,9 +201,12 @@ namespace Engine
             currentLocation.AppendChild(playerData.CreateTextNode(this.CurrentLocation.ID.ToString()));
             stats.AppendChild(currentLocation);
 
-            XmlNode currentWeapon = playerData.CreateElement("CurrentWeapon");
-            currentWeapon.AppendChild(playerData.CreateTextNode(this.CurrentWeapon.ID.ToString()));
-            stats.AppendChild(currentWeapon);
+            if (this.CurrentWeapon != null)
+            {
+                XmlNode currentWeapon = playerData.CreateElement("CurrentWeapon");
+                currentWeapon.AppendChild(playerData.CreateTextNode(this.CurrentWeapon.ID.ToString()));
+                stats.AppendChild(currentWeapon);
+            }
 
             XmlNode inventoryItems = playerData.CreateElement("InventoryItems");
             player.AppendChild(inventoryItems);
