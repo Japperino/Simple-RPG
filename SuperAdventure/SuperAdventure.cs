@@ -32,9 +32,12 @@ namespace SuperAdventure
                 _player = Player.CreateDefaultPlayer();
             }
 
+            lblHitPoints.DataBindings.Add("Text", _player, "CurrentHitPoints");
+            lblGold.DataBindings.Add("Text", _player, "Gold");
+            lblExperience.DataBindings.Add("Text", _player, "ExperiencePoints");
+            lblLevel.DataBindings.Add("Text", _player, "Level");
+
             MoveTo(_player.CurrentLocation);
-            
-            UpdatePlayerStats();
         }
 
         private void btnNorth_Click(object sender, EventArgs e)
@@ -81,9 +84,7 @@ namespace SuperAdventure
 
             // Completely heal the player
             _player.CurrentHitPoints = _player.MaximumHitPoints;
-
-            // Update Hit Points in UI
-            lblHitPoints.Text = _player.CurrentHitPoints.ToString();
+            
 
             // Does the location have a quest?
             if (newLocation.QuestAvailableHere != null)
@@ -186,9 +187,6 @@ namespace SuperAdventure
                 btnUsePotion.Visible = false;
             }
 
-            // Refresh player's status
-            UpdatePlayerStats();
-
             // Refresh player's inventory list
             UpdateInventoryListInUI();
 
@@ -257,8 +255,7 @@ namespace SuperAdventure
                         AddMessageToBox("You loot " + ii.Quantity.ToString() + " " + ii.Details.NamePlural);
                     }
                 }
-
-                UpdatePlayerStats();
+                
                 UpdateInventoryListInUI();
                 UpdateWeaponListInUI();
                 UpdatePotionListInUI();
@@ -274,8 +271,6 @@ namespace SuperAdventure
                 AddMessageToBox("The " + _currentMonster.Name + " did " + damageToPlayer.ToString() + " points of damage.");
 
                 _player.CurrentHitPoints -= damageToPlayer;
-
-                lblHitPoints.Text = _player.CurrentHitPoints.ToString();
 
                 if (_player.CurrentHitPoints <= 0)
                 {
@@ -320,8 +315,7 @@ namespace SuperAdventure
 
                 MoveTo(World.LocationByID(World.LOCATION_ID_HOME));
             }
-
-            lblHitPoints.Text = _player.CurrentHitPoints.ToString();
+            
             UpdateInventoryListInUI();
             UpdatePotionListInUI();
         }
@@ -430,14 +424,6 @@ namespace SuperAdventure
 
                 cboPotions.SelectedIndex = 0;
             }
-        }
-
-        private void UpdatePlayerStats()
-        {
-            lblHitPoints.Text = _player.CurrentHitPoints.ToString();
-            lblGold.Text = _player.Gold.ToString();
-            lblExperience.Text = _player.ExperiencePoints.ToString();
-            lblLevel.Text = _player.Level.ToString();
         }
 
         private void AddMessageToBox(string msg)
