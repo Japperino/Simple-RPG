@@ -118,7 +118,7 @@ namespace SuperAdventure
                             AddMessageToBox(newLocation.QuestAvailableHere.RewardItem.Name);
                             AddMessageToBox("");
 
-                            _player.ExperiencePoints += newLocation.QuestAvailableHere.RewardExperiencePoints;
+                            _player.AddExperiencePoints(newLocation.QuestAvailableHere.RewardExperiencePoints);
                             _player.Gold += newLocation.QuestAvailableHere.RewardGold;
 
                             // Add the reward item to the player's inventory
@@ -217,7 +217,7 @@ namespace SuperAdventure
                 AddMessageToBox("");
                 AddMessageToBox("You defeated the " + _currentMonster.Name);
 
-                _player.ExperiencePoints += _currentMonster.RewardExperiencePoints;
+                _player.AddExperiencePoints(_currentMonster.RewardExperiencePoints);
                 AddMessageToBox("You revieve " + _currentMonster.RewardExperiencePoints.ToString() + " experience points.");
 
                 _player.Gold += _currentMonster.RewardGold;
