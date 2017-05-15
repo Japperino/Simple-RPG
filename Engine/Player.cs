@@ -34,6 +34,16 @@ namespace Engine
             }
         }
 
+        public List<Weapon> Weapons
+        {
+            get { return Inventory.Where(x => x.Details is Weapon).Select(x => x.Details as Weapon).ToList(); }
+        }
+
+        public List<HealingPotion> Potions
+        {
+            get { return Inventory.Where(x => x.Details is HealingPotion).Select(x => x.Details as HealingPotion).ToList(); }
+        }
+
         public int Level {
             get { return ((ExperiencePoints / 100) + 1); }
         }
@@ -41,7 +51,7 @@ namespace Engine
         public BindingList<InventoryItem> Inventory { get; set; }
         public BindingList<PlayerQuest> Quests { get; set; }
         public Location CurrentLocation { get; set; }
-
+        
         private Player(int currentHitPoints, int maximumHitPoints, int gold, int experiencePoints) : base(currentHitPoints, maximumHitPoints)
         {
             Gold = gold;
@@ -171,23 +181,25 @@ namespace Engine
                 
                 if (item != null)
                 {
-                    item.Quantity -= qci.Quantity;
+                    RemoveItemFromInventory(item.Details, qci.Quantity);
                 }
             }
         }
 
-        public void AddItemToInventory(Item itemToAdd)
+        public void AddItemToInventory(Item itemToAdd, int quantity = 1)
         {
             InventoryItem item = Inventory.SingleOrDefault(ii => ii.Details.ID == itemToAdd.ID);
 
             if (item != null)
             {
-                item.Quantity++;
+                item.Quantity += quantity;
             }
             else
             {
-                Inventory.Add(new InventoryItem(itemToAdd, 1));
+                Inventory.Add(new InventoryItem(itemToAdd, quantity));
             }
+
+            RaiseInventoryChangedEvent(itemToAdd);
         }
 
         public void MarkQuestCompleted(Quest quest)
@@ -274,6 +286,41 @@ namespace Engine
             }
 
             return playerData.InnerXml;
+        }
+
+        public void RemoveItemFromInventory(Item itemToRemove, int quantity = 1)
+        {
+            InventoryItem item = Inventory.SingleOrDefault(x => x.Details.ID == itemToRemove.ID);
+
+            if (item != null)
+            {
+                item.Quantity -= quantity;
+
+                if (item.Quantity < 0)
+                {
+                    item.Quantity = 0;
+                }
+
+                if (item.Quantity == 0)
+                {
+                    Inventory.Remove(item);
+                }
+
+                RaiseInventoryChangedEvent(itemToRemove);
+            }
+        }
+
+        private void RaiseInventoryChangedEvent(Item item)
+        {
+            if (item is Weapon)
+            {
+                OnPropertyChanged("Weapons");
+            }
+
+            if (item is HealingPotion)
+            {
+                OnPropertyChanged("Potions");
+            }
         }
     }
 }
